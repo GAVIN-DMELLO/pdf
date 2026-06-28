@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 
 // subroute
-app.use("/api/v1/pdf", pdfRoutes);
+app.use("/api/v1", pdfRoutes);
 
 //error handler for non matching route
 app.use("*", (req, res) => {
