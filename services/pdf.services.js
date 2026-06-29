@@ -10,7 +10,7 @@ export const generateLatexCode = async (formData) => {
 
     const { chapters, package:pkg , pages } = formData;
 
-    const prompt = `Generate latex code of ${pages}pages using report class , generate ${chapters}`;
+    const prompt = `Generate latex code of ${pages}pages using report class , generate ${chapters} . i want only latex code and that too as much i said not more not less . and dont even try to generate even an extra inch of other content`;
 
     // Use chat.completions.create instead of responses.create
     const response = await client.chat.completions.create({
