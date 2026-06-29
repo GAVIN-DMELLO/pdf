@@ -1,4 +1,4 @@
-import { generateLatexCode } from "../services/pdf.service.js";
+import { generateLatexCode } from "../services/pdf.services.js";
 
 export const handlePdfGeneration = async (req, res) => {
   try {
@@ -8,10 +8,8 @@ export const handlePdfGeneration = async (req, res) => {
     const result = await generateLatexCode(formData);
 
     //prepare and send the response
-    return res.status(200).json({
-      status: "success",
-      data: result,
-    });
+    return res.status(200).type('text/plain').send(result);
+    
     //error handling 
   } catch (error) {
     console.error("Error in handlePdfGeneration:", error);
