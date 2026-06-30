@@ -11,8 +11,10 @@ export const generateLatexCode = async (formData) => {
     const { chapters, package:pkg , pages } = formData;
 
     const prompt = `Generate a latex code , write article class , then import lipsum, begin document,
-    
+
     Generate a tikzpicture with [remember picture,overlay]. Use \fill (not \draw). Draw a filled rectangle from ([xshift=3cm,yshift=-2cm]current page.north west) using rectangle ++(16cm,-0.4cm). Do not use coordinate addition (+(...)).
+
+    Add \vspace{-1cm}, then a single center environment containing a bold \LARGE heading, \\[0.5cm], and a \large subheading, followed by vspace{1cm}
 
      then write the lipsum dummy text for one page , then new page, then write lipsum dummy , then end the document . do as much as i said exactly not more not less not even a single word other than latex should be there`;
 
