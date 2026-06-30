@@ -10,7 +10,11 @@ export const generateLatexCode = async (formData) => {
 
     const { chapters, package:pkg , pages } = formData;
 
-    const prompt = `Generate latex code of ${pages}pages using report class , generate ${chapters} . i want only latex code and that too as much i said not more not less . and dont even try to generate even an extra inch of other content`;
+    const prompt = `Generate a latex code , write article class , then import lipsum, begin document,
+    
+    Generate a tikzpicture with [remember picture,overlay]. Use \fill (not \draw). Draw a filled rectangle from ([xshift=3cm,yshift=-2cm]current page.north west) using rectangle ++(16cm,-0.4cm). Do not use coordinate addition (+(...)).
+
+     then write the lipsum dummy text for one page , then new page, then write lipsum dummy , then end the document . do as much as i said exactly not more not less not even a single word other than latex should be there`;
 
     // Use chat.completions.create instead of responses.create
     const response = await client.chat.completions.create({
