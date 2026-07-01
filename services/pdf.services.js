@@ -16,6 +16,7 @@ export const generateLatexCode = async (formData) => {
     \\usepackage{xcolor}
     \\usepackage{eso-pic}
     \\usepackage{mathptmx}
+    \\usepackage{setspace}
 
     \\AddToShipoutPictureBG{
     \\begin{tikzpicture}[remember picture,overlay]
@@ -28,8 +29,17 @@ export const generateLatexCode = async (formData) => {
     }
     `;
 
+    // Inside your preamble or right after \begin{document}
+    const spacingCommand = `\\setstretch{${formData.lineSpacing}}`;
+
     // 2. Document begin
-    const documentBegin = `\\begin{document}`;
+    const documentBegin = `
+    \\begin{document}
+    \\setstretch{${formData.lineSpacing || 1.5}}
+    `;
+
+
+    
 
 
     
@@ -55,7 +65,8 @@ export const generateLatexCode = async (formData) => {
 
     for (let i = 1; i <= count; i++) {
         if (paraArray[i]) {
-            paragraphs.push(paraArray[i]);
+            const p = `{\\${formData.paraSize} ${paraArray[i]}}`;
+            paragraphs.push(p);
             // Add break only between paragraphs
             if (i < count) {
                 paragraphs.push(paraBreak);
