@@ -2,30 +2,31 @@
 
 export const generateLatexCode = async (formData) => {
     const { 
-        borderXShift, borderYShift, borderColor, hlength, thickness, 
+        borderYShift, borderColor, hlength, thickness, 
         verticalSpaceAfterBorder, verticalSpaceAfterHeading, 
         verticalSpaceAfterSubheading, contentXShift, contentYShift, 
-        contentTopShift, contentBottomShift, heading, subHeading 
+        contentTopShift, contentBottomShift, heading, subHeading , headingSize , subHeadingSize , paraSize 
     } = formData;
 
     // latex class and packages 
     const latexPreamble = `
-\\documentclass{article}
-\\usepackage[a4paper,left=${contentXShift}cm,right=${contentYShift}cm,top=${contentTopShift}cm,bottom=${contentBottomShift}cm]{geometry}
-\\usepackage{tikz}
-\\usepackage{xcolor}
-\\usepackage{eso-pic}
+    \\documentclass[14pt][a4paper]{article}
+    \\usepackage[a4paper,left=${contentXShift}cm,right=${contentYShift}cm,top=${contentTopShift}cm,bottom=${contentBottomShift}cm]{geometry}
+    \\usepackage{tikz}
+    \\usepackage{xcolor}
+    \\usepackage{eso-pic}
+    \\usepackage{mathptmx}
 
-\\AddToShipoutPictureBG{
-  \\begin{tikzpicture}[remember picture,overlay]
-    % Top Border (Centered using current page.north anchor)
-    \\fill[fill=${borderColor}] ([xshift=-${hlength/2}cm, yshift=-${borderYShift}cm]current page.north) rectangle ++(${hlength}cm, -${thickness}cm);
-    
-    % Bottom Border (Centered using current page.south anchor)
-    \\fill[fill=${borderColor}] ([xshift=-${hlength/2}cm, yshift=${borderYShift}cm]current page.south) rectangle ++(${hlength}cm, ${thickness}cm);
-  \\end{tikzpicture}
-}
-`;
+    \\AddToShipoutPictureBG{
+    \\begin{tikzpicture}[remember picture,overlay]
+        % Top Border (Centered using current page.north anchor)
+        \\fill[fill=${borderColor}] ([xshift=-${hlength/2}cm, yshift=-${borderYShift}cm]current page.north) rectangle ++(${hlength}cm, -${thickness}cm);
+        
+        % Bottom Border (Centered using current page.south anchor)
+        \\fill[fill=${borderColor}] ([xshift=-${hlength/2}cm, yshift=${borderYShift}cm]current page.south) rectangle ++(${hlength}cm, ${thickness}cm);
+    \\end{tikzpicture}
+    }
+    `;
 
     // 2. Document begin
     const documentBegin = `\\begin{document}`;
@@ -39,8 +40,8 @@ export const generateLatexCode = async (formData) => {
     `
     \\hspace{${verticalSpaceAfterBorder}cm}
     \\begin{center}
-    \\textbf{\\LARGE ${heading}}\\\\[${verticalSpaceAfterHeading}cm]
-    \\large ${subHeading}
+    {\\${headingSize} \\textbf{${heading}}}\\\\[${verticalSpaceAfterHeading}cm]
+    {\\${subHeadingSize} \\textit{${subHeading}}}
     \\end{center}
     \\vspace{${verticalSpaceAfterSubheading}cm}
     `;
