@@ -10,7 +10,7 @@ export const generateLatexCode = async (formData) => {
 
     // latex class and packages 
     const latexPreamble = `
-    \\documentclass[14pt][a4paper]{article}
+    \\documentclass{article}
     \\usepackage[a4paper,left=${contentXShift}cm,right=${contentYShift}cm,top=${contentTopShift}cm,bottom=${contentBottomShift}cm]{geometry}
     \\usepackage{tikz}
     \\usepackage{xcolor}
