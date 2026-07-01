@@ -1,31 +1,64 @@
-import "dotenv/config";
-import OpenAI from "openai";
 
-const client = new OpenAI({
-    apiKey: process.env.API_KEY,
-    baseURL: "https://api.groq.com/openai/v1",
-});
 
 export const generateLatexCode = async (formData) => {
 
-    const { chapters, package:pkg , pages } = formData;
+    const { borderXShift , borderYShift , borderColor , hlength , thickness , verticalSpaceAfterBorder , verticalSpaceAfterHeading , verticalSpaceAfterSubheading , contentXShift , contentYShift , contentTopShift , contentBottomShift , heading , subHeading , } = formData;
 
-    const prompt = `Generate a latex code , write article class , then import lipsum, begin document,
+    // 1. Configuration/Template Block
+const documentHeader = `
+\\documentclass{article}
+\\usepackage[a4paper,left=${contentXShift}cm,right=${contentYShift}cm,top=${contentTopShift}cm,bottom=${contentBottomShift}cm]{geometry}
+\\usepackage{tikz}
+\\begin{document}
+\\begin{tikzpicture}[remember picture,overlay]
+\\fill[fill=${borderColor}] ([xshift=${borderXShift}cm,yshift=-${borderYShift}cm]current page.north west) rectangle ++(${hlength}cm,-${thickness}cm);
+\\end{tikzpicture}
+`;
 
-    Use geometry with a4paper,left=2cm,right=2cm,top=3cm,bottom=2cm
+// 2. Content Block (The "Heading" area)
+const documentContent = `
+\\hspace{${verticalSpaceAfterBorder}cm}
+\\begin{center}
+\\textbf{\\LARGE ${heading}}\\\\[${verticalSpaceAfterHeading}cm]
+\\large ${subHeading}
+\\end{center}
+\\vspace{${verticalSpaceAfterSubheading}cm}
+`;
 
-    Generate a tikzpicture with [remember picture,overlay]. Use \fill (not \draw). Draw a filled rectangle from ([xshift=3cm,yshift=-2cm]current page.north west) using rectangle ++(16cm,-0.4cm). Do not use coordinate addition (+(...)).
+// 3. Control Block (Breaks and Spacing)
+const paraBreak = `\\par\\vspace{1cm}`;
 
-    Add \vspace{1cm}, then a single center environment containing a bold \LARGE heading, \\[0.5cm], and a \large subheading, followed by vspace{1cm}
+// 4. Footer Block
+const documentFooter = `\\end{document}`;
 
-     then write the lipsum dummy text for one page , then new page, then write lipsum dummy , then end the document . do as much as i said exactly not more not less not even a single word other than latex should be there`;
 
-    // Use chat.completions.create instead of responses.create
-    const response = await client.chat.completions.create({
-        model: "openai/gpt-oss-120b", // Ensure you are using a model name supported by Groq
-        messages: [{ role: "user", content: prompt }],
-    });
+const paraArray = formData.para;
+const count = paraArray[0];
 
-    // Access the content correctly
-    return response.choices[0].message.content;
+console.log(count)
+
+let docParts = [documentHeader, documentContent];
+
+
+for (let i = 1; i <= count; i++) {
+    const paraText = paraArray[i];
+    
+    // Add the text
+    docParts.push(paraText);
+    
+    // Add the break if it's not the last paragraph
+    if (i < count) {
+        docParts.push(paraBreak);
+    }
+}
+
+
+docParts.push(documentFooter);
+
+
+const final = docParts.join("\n");
+
+
+
+    return final;
 };
